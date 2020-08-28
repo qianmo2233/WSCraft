@@ -1,0 +1,4 @@
+#WebSocket监听端口
+Port: 8888
+#是否开启DEBUG模式
+DEBUG: false
