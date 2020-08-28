@@ -1,7 +1,7 @@
 package cc.qianmo.wscraft.WebSocket;
 
 import cc.qianmo.wscraft.Main;
-import cc.qianmo.wscraft.callBack;
+import cc.qianmo.wscraft.WSCraft;
 import net.sf.json.JSONObject;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.util.Random;
 
 public class Server extends WebSocketServer {
-    callBack callBack = new callBack();
+    static WSCraft wsCraft;
     public Server(int port) {
         super(new InetSocketAddress(port));
     }
@@ -24,7 +24,7 @@ public class Server extends WebSocketServer {
         String ID = getRandomString();
         userJoin(conn, ID);
         Main.getMain().getLogger().info("有新连接加入,ID:" + ID);
-        callBack.onConnect(ID);
+        wsCraft.onConnect(ID);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class Server extends WebSocketServer {
         String ID = connPool.getUserByWs(conn);
         userLeave(conn);
         Main.getMain().getLogger().info("ID : " + ID + "连接断开，原因" + reason);
-        callBack.onDisconnect(ID, reason);
+        wsCraft.onDisconnect(ID, reason);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Server extends WebSocketServer {
         try {
             JSONObject jsonObject = JSONObject.fromObject(message);
             String ID = connPool.getUserByWs(conn);
-            callBack.onMessage(ID, message);
+            wsCraft.onMessage(ID, message);
         } catch (Exception e) {
             Main.getMain().getLogger().warning("数据错误，本插件仅支持传输JSON字符串");
         }
@@ -50,7 +50,7 @@ public class Server extends WebSocketServer {
     public void onError(WebSocket conn, Exception e) {
         String ID = connPool.getUserByWs(conn);
         Main.getMain().getLogger().warning("WebSocket服务出错！");
-        callBack.onExceptions(ID, e);
+        wsCraft.onExceptions(ID, e);
         e.printStackTrace();
     }
 
