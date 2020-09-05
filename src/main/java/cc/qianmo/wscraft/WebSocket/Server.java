@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 import java.util.Random;
 
 public class Server extends WebSocketServer {
-    static WSCraft wsCraft;
+    WSCraft wsCraft = new WSCraft();
     public Server(int port) {
         super(new InetSocketAddress(port));
     }
@@ -20,7 +20,7 @@ public class Server extends WebSocketServer {
     }
 
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
+    public final void onOpen(WebSocket conn, ClientHandshake handshake) {
         String ID = getRandomString();
         userJoin(conn, ID);
         Main.getMain().getLogger().info("有新连接加入,ID:" + ID);
@@ -28,7 +28,7 @@ public class Server extends WebSocketServer {
     }
 
     @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+    public final void onClose(WebSocket conn, int code, String reason, boolean remote) {
         String ID = connPool.getUserByWs(conn);
         userLeave(conn);
         Main.getMain().getLogger().info("ID : " + ID + "连接断开，原因" + reason);
@@ -36,7 +36,7 @@ public class Server extends WebSocketServer {
     }
 
     @Override
-    public void onMessage(WebSocket conn, String message) {
+    public final void onMessage(WebSocket conn, String message) {
         try {
             JSONObject jsonObject = JSONObject.fromObject(message);
             String ID = connPool.getUserByWs(conn);
@@ -47,9 +47,9 @@ public class Server extends WebSocketServer {
     }
 
     @Override
-    public void onError(WebSocket conn, Exception e) {
+    public final void onError(WebSocket conn, Exception e) {
         String ID = connPool.getUserByWs(conn);
-        Main.getMain().getLogger().warning("WebSocket服务出错！");
+        Main.getMain().getLogger().warning("WebSocket服务出错！" + e);
         wsCraft.onExceptions(ID, e);
         e.printStackTrace();
     }
