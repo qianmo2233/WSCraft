@@ -8,10 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public abstract class WSCraft implements Listener {
-    abstract void onMessage(String ID, String Msg);
-    abstract void onConnect(String ID);
-    abstract void onDisconnect(String ID, String Reason);
-    abstract void onException(String ID, Exception e);
+    public abstract void onMessage(String ID, String Msg);
+    public abstract void onConnect(String ID);
+    public abstract void onDisconnect(String ID, String Reason);
+    public abstract void onException(String ID, Exception e);
 
     @EventHandler
     public final void onConnEvent(onConnEvent event) {
