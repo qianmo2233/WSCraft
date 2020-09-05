@@ -7,21 +7,25 @@ import org.java_websocket.WebSocket;
 import java.util.Collection;
 
 public class API {
-    public static void sendMsgToOne(String ID, String msg) {
+    public static boolean sendMsgToOne(String ID, String msg) {
         try {
             JSONObject jsonObject = JSONObject.fromObject(msg);
             WebSocket conn = connPool.getWsByUser(ID);
             connPool.sendMessageToUser(conn, msg);
+            return true;
         } catch (Exception e) {
             Main.getMain().getLogger().warning("数据发送失败，仅支持发送JSON数据");
+            return false;
         }
     }
-    public static void sendMsgToAll(String msg) {
+    public static boolean sendMsgToAll(String msg) {
         try {
             JSONObject jsonObject = JSONObject.fromObject(msg);
             connPool.sendMessageToAll(msg);
+            return true;
         } catch (Exception e) {
             Main.getMain().getLogger().warning("数据发送失败，仅支持发送JSON数据");
+            return false;
         }
     }
     public static Collection<String> getAllOnline() {

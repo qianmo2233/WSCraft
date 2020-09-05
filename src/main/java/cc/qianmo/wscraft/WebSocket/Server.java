@@ -1,8 +1,11 @@
 package cc.qianmo.wscraft.WebSocket;
 
+import cc.qianmo.wscraft.Event.onConnEvent;
+import cc.qianmo.wscraft.Event.onDisConnEvent;
+import cc.qianmo.wscraft.Event.onMsgEvent;
 import cc.qianmo.wscraft.Main;
-import cc.qianmo.wscraft.WSCraft;
 import net.sf.json.JSONObject;
+import org.bukkit.Bukkit;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -11,7 +14,6 @@ import java.net.InetSocketAddress;
 import java.util.Random;
 
 public class Server extends WebSocketServer {
-    WSCraft wsCraft = new WSCraft();
     public Server(int port) {
         super(new InetSocketAddress(port));
     }
@@ -24,7 +26,8 @@ public class Server extends WebSocketServer {
         String ID = getRandomString();
         userJoin(conn, ID);
         Main.getMain().getLogger().info("有新连接加入,ID:" + ID);
-        wsCraft.onConnect(ID);
+        onConnEvent event = new onConnEvent(ID);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     @Override
@@ -32,7 +35,8 @@ public class Server extends WebSocketServer {
         String ID = connPool.getUserByWs(conn);
         userLeave(conn);
         Main.getMain().getLogger().info("ID : " + ID + "连接断开，原因" + reason);
-        wsCraft.onDisconnect(ID, reason);
+        onDisConnEvent event = new onDisConnEvent(ID, reason);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     @Override
@@ -40,7 +44,8 @@ public class Server extends WebSocketServer {
         try {
             JSONObject jsonObject = JSONObject.fromObject(message);
             String ID = connPool.getUserByWs(conn);
-            wsCraft.onMessage(ID, message);
+            onMsgEvent event = new onMsgEvent(ID, message);
+            Bukkit.getServer().getPluginManager().callEvent(event);
         } catch (Exception e) {
             Main.getMain().getLogger().warning("数据错误，本插件仅支持传输JSON字符串");
         }
@@ -50,7 +55,6 @@ public class Server extends WebSocketServer {
     public final void onError(WebSocket conn, Exception e) {
         String ID = connPool.getUserByWs(conn);
         Main.getMain().getLogger().warning("WebSocket服务出错！" + e);
-        wsCraft.onExceptions(ID, e);
         e.printStackTrace();
     }
 

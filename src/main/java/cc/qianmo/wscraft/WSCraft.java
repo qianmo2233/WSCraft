@@ -1,22 +1,42 @@
 package cc.qianmo.wscraft;
 
-import cc.qianmo.wscraft.WebSocket.EventListener;
+import cc.qianmo.wscraft.Event.onConnEvent;
+import cc.qianmo.wscraft.Event.onDisConnEvent;
+import cc.qianmo.wscraft.Event.onExceptionEvent;
+import cc.qianmo.wscraft.Event.onMsgEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class WSCraft implements EventListener {
+public abstract class WSCraft implements Listener {
+    abstract void onMessage(String ID, String Msg);
+    abstract void onConnect(String ID);
+    abstract void onDisconnect(String ID, String Reason);
+    abstract void onException(String ID, Exception e);
 
-    public final void onMessage(String ID, String Message) {
-         //
+    @EventHandler
+    public final void onConnEvent(onConnEvent event) {
+        String ID = event.getId();
+        onConnect(ID);
     }
 
-    public final void onConnect(String ID) {
-        //
+    @EventHandler
+    public final void onDisConnEvent(onDisConnEvent event) {
+        String ID = event.getId();
+        String Reason = event.getReason();
+        onDisconnect(ID, Reason);
     }
 
-    public final void onDisconnect(String ID, String Reason) {
-        //
+    @EventHandler
+    public final void onMsgEvent(onMsgEvent event) {
+        String ID = event.getId();
+        String Msg = event.getMsg();
+        onMessage(ID, Msg);
     }
 
-    public final void onExceptions(String ID, Exception e) {
-        //
+    @EventHandler
+    public final void onExceptionEvent(onExceptionEvent event) {
+        String ID = event.getId();
+        Exception e = event.getException();
+        onException(ID, e);
     }
 }
