@@ -3,22 +3,22 @@ package cc.qianmo.wscraft.Event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class onExceptionEvent extends Event {
+public class MsgEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private String Id;
-    private Exception e;
+    private String Msg;
     public HandlerList getHandlers() {
         return handlers;
     }
-    public onExceptionEvent(String ID, Exception exception) {
+    public MsgEvent(String ID, String Message) {
+        Msg = Message;
         Id = ID;
-        e = exception;
     }
     public String getId() {
         return Id;
     }
-    public Exception getException() {
-        return e;
+    public String getMsg() {
+        return Msg;
     }
     public static HandlerList getHandlerList() {
         return handlers;

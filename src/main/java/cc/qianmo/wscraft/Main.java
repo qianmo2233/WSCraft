@@ -4,9 +4,22 @@ import cc.qianmo.wscraft.WebSocket.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.java_websocket.WebSocketImpl;
+import org.spigotmc.AsyncCatcher;
 
 public class Main extends JavaPlugin {
     private static Main main;
+    Thread asyncThread = new Thread(() -> {
+        while(true) {
+            try {
+                Thread.sleep(5000L);
+                if (AsyncCatcher.enabled) {
+                    AsyncCatcher.enabled = false;
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
     @Override
     public void onLoad() {
         main = this;
@@ -16,6 +29,9 @@ public class Main extends JavaPlugin {
     }
     @Override
     public void onEnable() {
+        this.getLogger().info("正在启动异步线程");
+        this.asyncThread.setDaemon(true);
+        this.asyncThread.start();
         this.getLogger().info("WSCraft启动成功");
     }
     @Override
@@ -33,4 +49,5 @@ public class Main extends JavaPlugin {
         s.start();
         this.getLogger().info("WebSocket服务监听端口：" + port);
     }
+
 }
