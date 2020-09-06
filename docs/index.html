@@ -79,15 +79,15 @@
 <p id="bkmrk-%E5%AF%B9%E4%BA%8E%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF%EF%BC%8Cwscraft%E6%8F%90%E4%BE%9B%E4%BA%86%E4%B8%80%E4%B8%AA%E6%8A%BD">对于接收消息，WSCraft提供了一个抽象类以供编写</p>
 <p id="bkmrk-%E9%A6%96%E5%85%88%EF%BC%8C%E7%BB%A7%E6%89%BFwscraft%E7%B1%BB%EF%BC%8C%E7%84%B6%E5%90%8E%E5%AF%B9%E5%85%B6%E4%B8%AD%E7%9A%84">首先，继承WSCraft类，然后对其中的抽象方法进行编写：</p>
 <pre id="bkmrk-public-class-callbac"><code class="language-Java">public class callBack extends WSCraft {
-    public void onMsg(String ID, String Msg) {
+    public void onMesssage(String ID, String Msg) {
         //当收到消息时触发
     }
 
-    public void onConn(String ID) {
+    public void onConnect(String ID) {
         //当有新连接加入时触发
     }
 
-    public void onDisConn(String ID, String Reason) {
+    public void onDisconnect(String ID, String Reason) {
         //当有连接断开时触发
     }
 
@@ -95,6 +95,7 @@
         //当出现问题时触发
     }
 }</code></pre>
+            <p id="bkmrk-%E8%BF%99%E6%A0%B7%E5%B0%B1%E5%A5%BD%E5%95%A6%7E">然后为这个类注册一个Bukkit监听器即可</p>
 <p id="bkmrk-%E8%BF%99%E6%A0%B7%E5%B0%B1%E5%A5%BD%E5%95%A6%7E">这样就好啦~</p>
 <p id="bkmrk-%E6%B3%A8%E6%84%8F%EF%BC%9A%E5%A6%82%E6%9E%9C%E6%8E%A5%E6%94%B6%E5%88%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9D%9Ejson%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A0%BC" class="callout info">注意：如果接收到的数据非JSON字符串格式，WSCraft将会报错，且不会触发onMsg方法</p>
 <hr id="bkmrk--2">
