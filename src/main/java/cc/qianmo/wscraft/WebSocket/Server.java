@@ -30,7 +30,7 @@ public class Server extends WebSocketServer {
 
     @Override
     public final void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        String ID = connPool.getUserByWs(conn);
+        String ID = ConnPool.getUserByWs(conn);
         userLeave(conn);
         Main.getMain().getLogger().info("ID : " + ID + "连接断开，原因" + reason);
         DisConnEvent event = new DisConnEvent(ID, reason);
@@ -41,7 +41,7 @@ public class Server extends WebSocketServer {
     public final void onMessage(WebSocket conn, String message) {
         try {
             JSONObject jsonObject = JSONObject.fromObject(message);
-            String ID = connPool.getUserByWs(conn);
+            String ID = ConnPool.getUserByWs(conn);
             MsgEvent event = new MsgEvent(ID, message);
             Bukkit.getServer().getPluginManager().callEvent(event);
         } catch (Exception e) {
@@ -51,18 +51,18 @@ public class Server extends WebSocketServer {
 
     @Override
     public final void onError(WebSocket conn, Exception e) {
-        String ID = connPool.getUserByWs(conn);
+        String ID = ConnPool.getUserByWs(conn);
         Main.getMain().getLogger().warning("WebSocket服务出错！" + e);
         ExceptionEvent event = new ExceptionEvent(ID, e);
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     private void userLeave(WebSocket conn) {
-        connPool.removeUser(conn);
+        ConnPool.removeUser(conn);
     }
 
     private void userJoin(WebSocket conn,String ID) {
-        connPool.addUser(ID, conn);
+        ConnPool.addUser(ID, conn);
     }
 
     public static String getRandomString(){

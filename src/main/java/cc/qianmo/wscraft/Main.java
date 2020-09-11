@@ -25,29 +25,53 @@ public class Main extends JavaPlugin {
         main = this;
         saveDefaultConfig();
         this.getLogger().info("WSCraft正在启动");
-        serverStart();
+        WebSocketServer(true);
     }
     @Override
     public void onEnable() {
-        this.getLogger().info("正在启动异步线程");
+        this.getLogger().info("正在启用异步线程");
         this.asyncThread.setDaemon(true);
         this.asyncThread.start();
         this.getLogger().info("WSCraft启动成功");
     }
     @Override
     public void onDisable() {
+        WebSocketServer(false);
         this.getLogger().info("WSCraft已卸载");
     }
+
+
+    /**
+     * 获取插件主类
+     * @return 插件主类
+     */
     public static Main getMain() {
         return main;
     }
-    private void serverStart() {
+
+    /**
+     * WebSocketServer操作方法
+     * @param action 开关WebSocket服务器
+     * <pre>{@code false} 停止服务器</pre>
+     * <pre>{@code ture} 启动服务器</pre>
+     */
+    private void WebSocketServer(Boolean action) {
         FileConfiguration config = getConfig();
         int port = config.getInt("Port");
         WebSocketImpl.DEBUG = config.getBoolean("DEBUG");
         Server s = new Server(port);
-        s.start();
-        this.getLogger().info("WebSocket服务监听端口：" + port);
+        if (action) {
+            s.start();
+            this.getLogger().info("正在启动WebSocket服务器");
+            this.getLogger().info("WebSocket服务器监听端口：" + port);
+        } else {
+            try {
+                this.getLogger().info("正在关闭WebSocket服务器");
+                s.stop();
+            } catch (Exception e) {
+                this.getLogger().warning("关闭WebSocket服务器出错" + e);
+            }
+        }
     }
 
 }

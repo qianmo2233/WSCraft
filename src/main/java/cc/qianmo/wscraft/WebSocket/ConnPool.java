@@ -4,7 +4,7 @@ import org.java_websocket.WebSocket;
 
 import java.util.*;
 
-public class connPool {
+public class ConnPool {
     private static final Map<WebSocket, String> wsUserMap = new HashMap<WebSocket, String>();
     public static String getUserByWs(WebSocket conn) {
         return wsUserMap.get(conn);

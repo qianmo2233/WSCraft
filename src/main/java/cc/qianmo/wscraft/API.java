@@ -1,6 +1,6 @@
 package cc.qianmo.wscraft;
 
-import cc.qianmo.wscraft.WebSocket.connPool;
+import cc.qianmo.wscraft.WebSocket.ConnPool;
 import net.sf.json.JSONObject;
 import org.java_websocket.WebSocket;
 
@@ -10,8 +10,8 @@ public class API {
     public static boolean sendMsgToOne(String ID, String msg) {
         try {
             JSONObject jsonObject = JSONObject.fromObject(msg);
-            WebSocket conn = connPool.getWsByUser(ID);
-            connPool.sendMessageToUser(conn, msg);
+            WebSocket conn = ConnPool.getWsByUser(ID);
+            ConnPool.sendMessageToUser(conn, msg);
             return true;
         } catch (Exception e) {
             Main.getMain().getLogger().warning("数据发送失败，仅支持发送JSON数据");
@@ -21,7 +21,7 @@ public class API {
     public static boolean sendMsgToAll(String msg) {
         try {
             JSONObject jsonObject = JSONObject.fromObject(msg);
-            connPool.sendMessageToAll(msg);
+            ConnPool.sendMessageToAll(msg);
             return true;
         } catch (Exception e) {
             Main.getMain().getLogger().warning("数据发送失败，仅支持发送JSON数据");
@@ -29,6 +29,6 @@ public class API {
         }
     }
     public static Collection<String> getAllOnline() {
-        return connPool.getOnlineUser();
+        return ConnPool.getOnlineUser();
     }
 }
