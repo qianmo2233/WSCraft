@@ -1,3 +1,7 @@
   name: WSCraft
   main: cc.qianmo.wscraft.Main
   version: 1.0.0
+  commands:
+    wsc:
+      description: WSCraft主命令
+      usage: /wsc token

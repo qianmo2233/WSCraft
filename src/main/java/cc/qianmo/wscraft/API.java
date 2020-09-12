@@ -31,4 +31,7 @@ public class API {
     public static Collection<String> getAllOnline() {
         return ConnPool.getOnlineUser();
     }
+    public static String getPlayerName(String ID) {
+        return ConnPool.getPlayer(ID);
+    }
 }

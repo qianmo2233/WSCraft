@@ -1,6 +1,7 @@
 package cc.qianmo.wscraft;
 
 import cc.qianmo.wscraft.WebSocket.Server;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.java_websocket.WebSocketImpl;
@@ -8,18 +9,6 @@ import org.spigotmc.AsyncCatcher;
 
 public class Main extends JavaPlugin {
     private static Main main;
-    Thread asyncThread = new Thread(() -> {
-        while(true) {
-            try {
-                Thread.sleep(5000L);
-                if (AsyncCatcher.enabled) {
-                    AsyncCatcher.enabled = false;
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    });
     @Override
     public void onLoad() {
         main = this;
@@ -32,6 +21,15 @@ public class Main extends JavaPlugin {
         this.getLogger().info("正在启用异步线程");
         this.asyncThread.setDaemon(true);
         this.asyncThread.start();
+        this.getLogger().info("正在初始化数据库");
+        try {
+            setup();
+        } catch (Exception e) {
+            this.getLogger().warning("初始化数据库出错" + e);
+        }
+
+        Bukkit.getPluginManager().registerEvents(new Action(), this);
+        Bukkit.getPluginCommand("wsc");
         this.getLogger().info("WSCraft启动成功");
     }
     @Override
@@ -74,4 +72,25 @@ public class Main extends JavaPlugin {
         }
     }
 
+    /**
+     * 启用异步线程
+     * @throws Exception
+     */
+    Thread asyncThread = new Thread(() -> {
+        while(true) {
+            try {
+                Thread.sleep(5000L);
+                if (AsyncCatcher.enabled) {
+                    AsyncCatcher.enabled = false;
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
+    private void setup() throws Exception {
+        DataBase dataBase = new DataBase(getDataFolder().getPath() + "/Player.db");
+        dataBase.setup();
+    }
 }
